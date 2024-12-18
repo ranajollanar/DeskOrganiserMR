@@ -26,7 +26,7 @@ This project blends the efficiency of virtual tools with the tactile nature of t
 
 ## UI/UX Design
 The user interface has been carefully designed to ensure simplicity and usability, focusing on an intuitive mixed reality experience.  
-[Check out the Figma Design]([https://www.figma.com/design/iNA4mer0PkLN5anEjYSqsh/DeskOrganiserUI?node-id=0-1&t=YPCp8T9JfZ2xN9er-1]) 
+[Check out the Figma Design](https://www.figma.com/design/iNA4mer0PkLN5anEjYSqsh/DeskOrganiserUI?node-id=0-1&t=YPCp8T9JfZ2xN9er-1) 
 
 ## How It Works
 1. **Spawn Virtual Objects**: Use the menu to spawn sticky notes, timers, and other tools.
