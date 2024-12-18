@@ -41,6 +41,17 @@ public class SceneManager : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void DisplayObject(GameObject gameObject)
+    {
+        StartCoroutine(DisplayObjectCoroutine(gameObject));
+    }
+    private IEnumerator DisplayObjectCoroutine(GameObject gameObject)
+    {
+        gameObject.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
+    }
     
     public void TakeScreenshot()
     {
