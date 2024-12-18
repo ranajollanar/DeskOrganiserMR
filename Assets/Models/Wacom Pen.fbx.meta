@@ -3,7 +3,37 @@ guid: 026d287a4feff77499cdd7093714c974
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PenButtons
+    second: {fileID: 2100000, guid: aacd83d61f5207b4abad7fe43fc54444, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PenLowerBody
+    second: {fileID: 2100000, guid: 090541a5d2816bb4496139a0f8616ca4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PenTop
+    second: {fileID: 2100000, guid: 624578543eab02744872e2ad0e6f9dd4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PenUpperBody
+    second: {fileID: 2100000, guid: 98fad04778955154b8fe05d9104232c5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PenWacomLogo
+    second: {fileID: 2100000, guid: 9c8d30b2f5da756469e06b8fedc66b1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pentip
+    second: {fileID: 2100000, guid: 057f02428cb7c4948af1ed2bd0f73c52, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -35,7 +65,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.5
+    globalScale: 0.6
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -90,7 +120,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.005
+    globalScale: 0.006
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

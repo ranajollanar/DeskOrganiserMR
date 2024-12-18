@@ -928,8 +928,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.010000001, y: 0.001049282, z: 0.009664109}
-  m_Center: {x: 0, y: 0.0005246399, z: 0.00016794214}
+  m_Size: {x: 0.010000001, y: 0.002652721, z: 0.009664109}
+  m_Center: {x: 0, y: 0.00042813562, z: 0.00016794227}
 --- !u!1 &4764008561629641081
 GameObject:
   m_ObjectHideFlags: 0
@@ -1199,7 +1199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: bac08eda-400f-4f61-8842-77e7699e068d
-  instanceId: eddf5299-62c6-4eba-8ad3-5bc090df17a7
+  instanceId: b4fb8cb2-4a1c-4f5a-abba-376ac6ea0076
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: 

@@ -1,77 +1,156 @@
+using System;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
-public class ConstrainedDrawingPen : MonoBehaviour
+public class DrawingPen : MonoBehaviour
 {
-    [SerializeField] private Transform penTip; // The object to follow (e.g., pen tip or collider)
-    [SerializeField] private Transform whiteboard; // The plane to constrain the drawing
-    [SerializeField] private float minDistance = 0.01f; // Minimum distance between points to draw
-    [SerializeField] private float planeOffset = 0.2f; // Offset for the plane along its forward direction
+    [SerializeField] private Transform penTip;
+    [SerializeField] private Transform whiteboard;
+    [SerializeField] private float minDistance = 0.01f;
+    [SerializeField] private float planeOffset = 0.2f;
+    [SerializeField] private LineRenderer lineRendererPreset;
+    [SerializeField] private LineRenderer lineRendererBlue;
+    [SerializeField] private LineRenderer lineRendererPink;
     private LineRenderer lineRenderer;
     private List<Vector3> points = new List<Vector3>();
+    private List<LineRenderer> drawnLines = new List<LineRenderer>();  // List to track drawn lines
     private Plane drawingPlane;
-    private bool isCollidingWithWhiteboard = false; // Tracks if the pen tip is colliding with the whiteboard
+    private bool isCollidingWithWhiteboard = false;
+    private bool isDrawing = false;
+    private String penColor = "Black";
 
     private void Start()
     {
-        // Initialize LineRenderer
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 0; // Start with no points
-        lineRenderer.useWorldSpace = true; // Use world space for drawing
+        CreateNewLineRenderer();
     }
 
     private void Update()
     {
-        // Update the drawing plane to ensure it's aligned with the current position of the whiteboard
         UpdateDrawingPlane();
 
-        // Only draw if the pen tip is colliding with the whiteboard
-        if (!isCollidingWithWhiteboard) return;
-
-        // Get the pen tip's projected position onto the plane
-        Vector3 projectedPosition = ProjectPointOntoPlane(penTip.position);
-
-        // Check if the pen tip has moved enough to add a new point
-        if (points.Count == 0 || Vector3.Distance(points[points.Count - 1], projectedPosition) >= minDistance)
+        if (isCollidingWithWhiteboard)
         {
-            AddPoint(projectedPosition);
+            // Get the pen tip's projected position onto the plane
+            Vector3 projectedPosition = ProjectPointOntoPlane(penTip.position);
+
+            if (!isDrawing)
+            {
+                CreateNewLineRenderer();
+                isDrawing = true;
+            }
+
+            if (points.Count == 0 || Vector3.Distance(points[points.Count - 1], projectedPosition) >= minDistance)
+            {
+                AddPoint(projectedPosition);
+            }
+        }
+        else
+        {
+            isDrawing = false;
         }
     }
 
+    public void ChangeLineRendererColor(string colour)
+    {
+        penColor = colour;
+
+    }
+
+
     private void UpdateDrawingPlane()
     {
-        // Define the drawing plane based on the whiteboard, shifted by planeOffset along its forward direction
         Vector3 planeNormal = whiteboard.forward; // Use the whiteboard's local forward as the plane's normal
         Vector3 planePosition = whiteboard.position + planeNormal * planeOffset; // Shift the plane position
-        drawingPlane = new Plane(planeNormal, planePosition); // Update the drawing plane
+        drawingPlane = new Plane(planeNormal, planePosition); 
     }
 
     private Vector3 ProjectPointOntoPlane(Vector3 point)
     {
-        // Get the perpendicular distance from the point to the plane
         float distanceToPlane = drawingPlane.GetDistanceToPoint(point);
 
-        // Subtract the distance along the plane's normal to project onto the plane
         return point - drawingPlane.normal * distanceToPlane;
     }
 
     private void AddPoint(Vector3 newPoint)
     {
-        points.Add(newPoint); // Add the new point to the list
-        lineRenderer.positionCount = points.Count; // Update the LineRenderer's point count
-        lineRenderer.SetPosition(points.Count - 1, newPoint); // Set the new point in the LineRenderer
+        if (points.Count == 0)
+        {
+            points.Add(newPoint);
+            lineRenderer.positionCount = points.Count;
+            lineRenderer.SetPosition(points.Count - 1, newPoint);
+            return;
+        }
+        
+        Vector3 lastPoint = points[points.Count - 1];
+
+        float distance = Vector3.Distance(lastPoint, newPoint);
+        int interpolationSteps = Mathf.CeilToInt(distance / minDistance);
+
+        for (int i = 1; i <= interpolationSteps; i++)
+        {
+            float t = i * 3 / (float)interpolationSteps;
+            Vector3 interpolatedPoint = Vector3.Lerp(lastPoint, newPoint, t);
+
+            points.Add(interpolatedPoint);
+            lineRenderer.positionCount = points.Count;
+            lineRenderer.SetPosition(points.Count - 1, interpolatedPoint);
+        }
     }
 
-    public void ClearDrawing()
+    private void CreateNewLineRenderer()
     {
-        points.Clear(); // Clear the points list
-        lineRenderer.positionCount = 0; // Reset the LineRenderer
+        LineRenderer newLineRenderer = null;
+
+        if (penColor == "Black")
+        {
+            newLineRenderer = Instantiate(lineRendererPreset, Vector3.zero, Quaternion.identity);
+        }
+        else if (penColor == "Blue")
+        {
+            newLineRenderer = Instantiate(lineRendererBlue, Vector3.zero, Quaternion.identity);
+        }
+        else if (penColor == "Pink")
+        {
+            newLineRenderer = Instantiate(lineRendererPink, Vector3.zero, Quaternion.identity);
+        }
+
+        lineRenderer = newLineRenderer;
+
+        // Parent the line renderer to the whiteboard
+        lineRenderer.transform.SetParent(whiteboard);
+
+        // Clear any previous points and reset the LineRenderer
+        lineRenderer.positionCount = 0;
+        points.Clear(); // Reset the points list
+
+        // Add this LineRenderer to the list of drawn lines
+        drawnLines.Add(lineRenderer);
+    }
+
+
+    public void DeleteLastLineRenderer()
+    {
+        if (drawnLines.Count <= 0) return;
+        if (drawnLines.Count > 0)
+        {
+            // Destroy the last drawn line
+            LineRenderer lastLine = drawnLines[drawnLines.Count - 1];
+            drawnLines.RemoveAt(drawnLines.Count - 1);
+            Destroy(lastLine.gameObject); // Destroy the last LineRenderer
+
+            // Reset the points and the LineRenderer for new drawing
+            if (drawnLines.Count > 0)
+            {
+                lineRenderer = drawnLines[drawnLines.Count - 1]; // Set the current line to the last drawn one
+                points.Clear();
+                // Recreate the line with the points from the last line (optional, for a smooth transition)
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Check if the colliding object is the whiteboard
         if (other.transform == whiteboard)
         {
             isCollidingWithWhiteboard = true;
@@ -80,7 +159,6 @@ public class ConstrainedDrawingPen : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // Check if the exiting object is the whiteboard
         if (other.transform == whiteboard)
         {
             isCollidingWithWhiteboard = false;
