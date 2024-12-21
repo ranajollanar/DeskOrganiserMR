@@ -2,6 +2,7 @@
 
 ## Overview
 **DeskOrganiser MR** is a mixed reality (MR) productivity tool designed to enhance workspace organization and efficiency. It enables users to seamlessly integrate virtual tools into their physical environment, creating a hybrid workspace. Users can spawn sticky notes, write notes, set timers, use a stopwatch, take screenshots, play ambient background music, or sketch on a virtual whiteboard. All objects retain their spatial data, ensuring an intuitive and immersive experience.
+Check [the video demo](https://drive.google.com/file/d/1XbKUCILcz45_bbU_g1UfoDvK5g282PRe/view?usp=drive_link)
 
 ## Features
 ### Core Features
